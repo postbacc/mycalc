@@ -1,18 +1,48 @@
-option(PACKAGE_TESTS "Build the tests" OFF)
-
-if(PACKAGE_TESTS)
-	enable_testing()
-	add_subdirectory(tests)
-	add_subdirectory("${PROJECT_SOURCE_DIR}/extern/googletest" "extern/googletest")
-
-	mark_as_advanced(
-	        BUILD_GMOCK BUILD_GTEST BUILD_SHARED_LIBS
-	        gmock_build_tests gtest_build_samples gtest_build_tests
-	        gtest_disable_pthreads gtest_force_shared_crt gtest_hide_internal_symbols
-	)
-	set_target_properties(gtest PROPERTIES FOLDER extern)
-	set_target_properties(gtest_main PROPERTIES FOLDER extern)
-	set_target_properties(gmock PROPERTIES FOLDER extern)
-	set_target_properties(gmock_main PROPERTIES FOLDER extern)
+# Download and unpack googletest at configure time
+configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
+execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+	RESULT_VARIABLE result
+	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+if(result)
+	message(FATAL_ERROR "CMake step for googletest failed: ${result}")
+endif()
+execute_process(COMMAND ${CMAKE_COMMAND} --build .
+	RESULT_VARIABLE result
+	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+if(result)
+	message(FATAL_ERROR "Build step for googletest failed: ${result}")
 endif()
 
+# Prevent overriding the parent project's compiler/linker
+# settings on Windows
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+# Add googletest directly to our build. This defines
+# the gtest and gtest_main targets.
+add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
+	${CMAKE_CURRENT_BINARY_DIR}/googletest-build
+        EXCLUDE_FROM_ALL)
+
+# The gtest/gtest_main targets carry header search path
+# dependencies automatically when using CMake 2.8.11 or
+# later. Otherwise we have to add them here ourselves.
+if (CMAKE_VERSION VERSION_LESS 2.8.11)
+	include_directories("${gtest_SOURCE_DIR}/include")
+endif()
+
+file(GLOB USER_FILES 
+	"code/*.h"
+	"code/*.cpp"
+)
+file(GLOB TEST_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/tests 
+	"tests/test_*.cpp"
+)
+
+#add_executable(test_mycalc code/test_mycalc.cpp code/mycalc.cpp code/mycalc.h)
+foreach( testsourcefile ${TEST_FILES} )
+	string( REPLACE ".cpp" "" testname ${testsourcefile} )
+	add_executable( ${testname} ${USER_FILES} )
+	target_link_libraries( ${testname} gtest_main )
+	add_test(${testname} gtest_main)
+endforeach( testsourcefile ${TEST_FILES} )
+ENABLE_TESTING()
