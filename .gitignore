@@ -3,4 +3,4 @@ build/*
 ipch
 
 # exception to the rule
-!somefolder/.gitkeep 
+!build/.gitkeep 
