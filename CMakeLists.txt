@@ -1,5 +1,10 @@
 cmake_minimum_required (VERSION 2.8.11)
 
+# set default build to debug
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Release or Debug" FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
+
 # get folder name as project name
 get_filename_component(ProjectId ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 string(REPLACE " " "_" ProjectId ${ProjectId})
@@ -48,8 +53,8 @@ foreach( testsourcefile ${TEST_FILES} )
 endforeach( testsourcefile ${TEST_FILES} )
 
 # recreate a graded test for file with project name 
-set( graded_test_name "test_${ProjectId}.cpp")
-add_executable( test_graded ${graded_test_name} ${USER_FILES} )
-target_link_libraries( test_graded gtest_main )
+set( graded_test_name "tests/test_${ProjectId}.cpp")
+add_executable( graded_test ${graded_test_name} ${USER_FILES} )
+target_link_libraries( graded_test gtest_main )
 
 ENABLE_TESTING()

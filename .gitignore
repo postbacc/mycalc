@@ -1,1 +1,6 @@
+# exclude everything
 build/*
+ipch
+
+# exception to the rule
+!somefolder/.gitkeep 

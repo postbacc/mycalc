@@ -5,11 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run Test",
+            "name": "Run Graded Test",
             "type": "cppdbg",
             "request": "launch",
             "preLaunchTask": "make project",
-            "program": "${fileDirname}/../build/test_graded",
+            "program": "${workspaceFolder}/build/graded_test",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -20,7 +20,7 @@
                 {
                     "description": "Enable pretty-printing for gdb",
                     "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
+                    "ignoreFailures": false
                 }
             ],
             "miDebuggerPath": "/usr/bin/gdb"
