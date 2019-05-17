@@ -1,4 +1,10 @@
 cmake_minimum_required (VERSION 2.8.11)
+
+# get folder name as project name
+get_filename_component(ProjectId ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+string(REPLACE " " "_" ProjectId ${ProjectId})
+project(${ProjectId})
+
 # Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
@@ -40,4 +46,10 @@ foreach( testsourcefile ${TEST_FILES} )
 	target_link_libraries( ${testname} gtest_main )
 	add_test(${testname} ${testname})
 endforeach( testsourcefile ${TEST_FILES} )
+
+# recreate a graded test for file with project name 
+set( graded_test_name "test_${ProjectId}.cpp")
+add_executable( test_graded ${graded_test_name} ${USER_FILES} )
+target_link_libraries( test_graded gtest_main )
+
 ENABLE_TESTING()
