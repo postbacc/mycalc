@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "mycalc.h"
+#include "../code/mycalc.h"
 
 class mycalcTest : public ::testing::Test {
 protected:
@@ -19,7 +19,7 @@ TEST_F(mycalcTest, SumFuncForNegativeResult){
 }
 
 TEST_F(mycalcTest, SubFunc){
-	EXPECT_EQ(22,mycalcobj.sub(3,2));
+	EXPECT_EQ(1,mycalcobj.sub(3,2));
 }
 
 
