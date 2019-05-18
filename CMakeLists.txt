@@ -43,21 +43,11 @@ file(GLOB TEST_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	"tests/test_*.cpp"
 )
 
-#add_executable(test_mycalc code/test_mycalc.cpp code/mycalc.cpp code/mycalc.h)
-foreach( testsourcefile ${TEST_FILES} )
-	string( REPLACE ".cpp" "" testname ${testsourcefile} )
-	string( REPLACE "tests/" "" testname ${testname} )
-	add_executable( ${testname} ${TEST_FILES} ${USER_FILES})
-	target_link_libraries( ${testname} gtest_main )
-	add_test(${testname} ${testname})
-endforeach( testsourcefile ${TEST_FILES} )
-
-# recreate a graded test for file with project name 
-set( graded_test_name "tests/test_${ProjectId}.cpp")
-add_executable( graded_test ${graded_test_name} ${USER_FILES} )
-target_link_libraries( graded_test gtest_main )
+# create an executable for all tests 
+add_executable( run_tests ${TEST_FILES} ${USER_FILES} )
+target_link_libraries( run_tests gtest_main )
 
 ENABLE_TESTING()
 
 # create an executable for main.cpp in app folder
-add_executable( main "app/main.cpp" ${USER_FILES} )
+add_executable( run_app "app/main.cpp" ${USER_FILES} )
