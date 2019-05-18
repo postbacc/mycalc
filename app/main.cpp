@@ -1,19 +1,19 @@
-#include "../code/mycalc.h"
 #include <iostream>
+#include "../code/mycalc.h"
 
 using namespace std;
 
 int main(){
+
+    // Do some printing
     int var;
     cout << "Hello World, please enter a number " << endl;
     cin >> var;
     cout << "your number was : " << var << endl;
 
-    mycalc o1;
-    o1.sub(var,2);
-    
-    mycalc o2;
-    o2.sum(var,var);
+    // create an object of mycalc and call its member function
+    mycalc casio;
+    casio.sub(var,2);
     
     return 0;
 }
